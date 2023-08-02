@@ -13,10 +13,11 @@ const Form = ({ onSuccess, onError }) => {
     async (evt) => {
       evt.preventDefault();
       setSending(true);
+      // We try to call mockContactApi
       try {
         await mockContactApi();
         setSending(false);
-        onSuccess();
+        onSuccess(true);
       } catch (err) {
         setSending(false);
         onError(err);
@@ -30,7 +31,7 @@ const Form = ({ onSuccess, onError }) => {
       <div className="row">
         <div className="col">
           <Field placeholder="Votre nom" label="Nom" />
-          <Field placeholder="Votre prénom" label="Prénom"  />
+          <Field placeholder="Votre prénom" label="Prénom" />
           <Select
             selection={["Personel", "Entreprise"]}
             onChange={() => null}
@@ -38,10 +39,10 @@ const Form = ({ onSuccess, onError }) => {
             type="large"
             titleEmpty
           />
-          <Field placeholder="Entrez votre email" label="Email" type={FIELD_TYPES.EMAIL}/>
+          <Field placeholder="Entrez votre email" label="Email" type={FIELD_TYPES.EMAIL} />
           <Button type={BUTTON_TYPES.SUBMIT} disabled={sending}>
             {sending ? "En cours" : "Envoyer"}
-          </Button>
+          </ Button>
         </div>
         <div className="col">
           <Field

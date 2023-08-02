@@ -49,7 +49,7 @@ const Select = ({
             </>
           )}
         </ul>
-        <input type="hidden" value={value || ""} name={name} required/>
+        <input type="hidden" value={value || ""} name={name} />
         <button
           type="button"
           data-testid="collapse-button-testid"
