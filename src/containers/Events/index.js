@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import EventCard from "../../components/EventCard";
 import Select from "../../components/Select";
 import { useData } from "../../contexts/DataContext";
@@ -11,34 +11,29 @@ const PER_PAGE = 9;
 
 const EventList = () => {
   const { data, error } = useData();
-  const [type, setType] = useState(null);
+  const [type, setType] = useState();
   const [currentPage, setCurrentPage] = useState(1);
+
+  // Filtre les événements en fonction du type sélectionné
   const filteredEvents = (
-    (!type
-      ? data?.events
-      : data?.events) || []
-  ).filter((element) => {
-    if (type === null) {
-      return true;
-    }
-    if (element.type === type) {
-      return true;
-    }
-    return false;
-  }).filter((event, index) => {
-    if ((currentPage - 1) * PER_PAGE <= index && PER_PAGE * currentPage > index) {
+    type
+      ? data?.events.filter(event => event.type === type)
+      : data?.events
+  ) || [];
 
-      return true;
-    }
-    return false;
-  });
+  // Applique la pagination sur les événements filtrés
+  const paginatedEvents = filteredEvents.filter((event, index) => 
+    (currentPage - 1) * PER_PAGE <= index && PER_PAGE * currentPage > index
+  );
+
   const changeType = (evtType) => {
-
     setCurrentPage(1);
     setType(evtType);
   };
+
   const pageNumber = Math.floor((filteredEvents?.length || 0) / PER_PAGE) + 1;
   const typeList = new Set(data?.events.map((event) => event.type));
+
   return (
     <>
       {error && <div>An error occured</div>}
@@ -52,7 +47,7 @@ const EventList = () => {
             onChange={(value) => (value ? changeType(value) : changeType(null))}
           />
           <div id="events" className="ListContainer">
-            {filteredEvents.map((event) => (
+            {paginatedEvents.map((event) => (
               <Modal key={event.id} Content={<ModalEvent event={event} />}>
                 {({ setIsOpened }) => (
                   <EventCard
